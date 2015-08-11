@@ -45,30 +45,31 @@
 - (void)setupDefaultValues
 {
     self.backgroundColor = [UIColor whiteColor];
-    self.clipsToBounds   = YES;
-    _showLabel           = YES;
-    _barBackgroundColor  = PNLightGrey;
-    _labelTextColor      = [UIColor grayColor];
-    _labelFont           = [UIFont systemFontOfSize:11.0f];
-    _xChartLabels        = [NSMutableArray array];
-    _yChartLabels        = [NSMutableArray array];
-    _bars                = [NSMutableArray array];
-    _xLabelSkip          = 1;
-    _yLabelSum           = 4;
-    _labelMarginTop      = 0;
-    _chartMargin         = 25.0;
-    _barRadius           = 2.0;
-    _showChartBorder     = NO;
-    _showLevelLine       = NO;
-    _yChartLabelWidth    = 18;
-    _rotateForXAxisText  = false;
-    _isGradientShow      = YES;
-    _isShowNumbers       = YES;
-    _yLabelPrefix        = @"";
-    _yLabelSuffix        = @"";
-	_yLabelFormatter = ^(CGFloat yValue){
-		return [NSString stringWithFormat:@"%1.f",yValue];
-	};
+    self.clipsToBounds = YES;
+    _showLabel = YES;
+    _barBackgroundColor = PNLightGrey;
+    _labelTextColor = [UIColor grayColor];
+    _labelFont = [UIFont systemFontOfSize:11.0f];
+    _xChartLabels = [NSMutableArray array];
+    _yChartLabels = [NSMutableArray array];
+    _bars = [NSMutableArray array];
+    _xLabelSkip = 1;
+    _yLabelSum = 4;
+    _labelMarginTop = 0;
+    _chartMargin = 25.0;
+    _barRadius = 2.0;
+    _showChartBorderLeft = NO;
+    _showChartBorderBottom = NO;
+    _showLevelLine = NO;
+    _yChartLabelWidth = 18;
+    _rotateForXAxisText = false;
+    _isGradientShow = YES;
+    _isShowNumbers = YES;
+    _yLabelPrefix = @"";
+    _yLabelSuffix = @"";
+    _yLabelFormatter = ^(CGFloat yValue) {
+        return [NSString stringWithFormat:@"%1.f", yValue];
+    };
 }
 
 - (void)setYValues:(NSArray *)yValues
@@ -294,7 +295,7 @@
     
     //Add chart border lines
 
-    if (_showChartBorder) {
+    if (_showChartBorderBottom) {
         _chartBottomLine = [CAShapeLayer layer];
         _chartBottomLine.lineCap      = kCALineCapButt;
         _chartBottomLine.fillColor    = [[UIColor whiteColor] CGColor];
@@ -321,7 +322,9 @@
         _chartBottomLine.strokeEnd = 1.0;
 
         [self.layer addSublayer:_chartBottomLine];
-      
+
+    }
+    if (_showChartBorderLeft) {
         //Add left Chart Line
 
         _chartLeftLine = [CAShapeLayer layer];

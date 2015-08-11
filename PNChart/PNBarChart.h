@@ -58,7 +58,10 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 @property (nonatomic) BOOL showLabel;
 
 /** Controls whether the chart border line should be displayed. */
-@property (nonatomic) BOOL showChartBorder;
+@property (nonatomic) BOOL showChartBorderBottom;
+
+/** Controls whether the chart border line should be displayed. */
+@property (nonatomic) BOOL showChartBorderLeft;
 
 /** Controls whether the chart Horizontal separator should be displayed. */
 @property (nonatomic, assign) BOOL showLevelLine;
