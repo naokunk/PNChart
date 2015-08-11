@@ -118,4 +118,6 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 /** whether show numbers*/
 @property (nonatomic, assign) BOOL isShowNumbers;
 
+@property (nonatomic) BOOL showNumbersOnBarTop;
+
 @end

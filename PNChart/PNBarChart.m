@@ -198,87 +198,90 @@
 
 - (void)updateBar
 {
-    
+
     //Add bars
     CGFloat chartCavanHeight = self.frame.size.height - _chartMargin * 2 - kXLabelHeight;
     NSInteger index = 0;
-    
+    CGFloat barYPosition;
+    CGFloat textLayerHeight;
+
+    textLayerHeight = 0.0f;
+    barYPosition = self.frame.size.height - chartCavanHeight - kXLabelHeight - _chartMargin; //Bar Y position
+
     for (NSNumber *valueString in _yValues) {
-        
+
         PNBar *bar;
-        
+
         if (_bars.count == _yValues.count) {
-            bar = [_bars objectAtIndex:index];
-        }else{
+            bar = _bars[index];
+        } else {
             CGFloat barWidth;
             CGFloat barXPosition;
-            
+
             if (_barWidth) {
                 barWidth = _barWidth;
-                barXPosition = index *  _xLabelWidth + _chartMargin + _xLabelWidth /2.0 - _barWidth /2.0;
-            }else{
-                barXPosition = index *  _xLabelWidth + _chartMargin + _xLabelWidth * 0.25;
+                barXPosition = index * _xLabelWidth + _chartMargin + _xLabelWidth / 2.0f - _barWidth / 2.0f;
+            } else {
+                barXPosition = index * _xLabelWidth + _chartMargin + _xLabelWidth * 0.25f;
                 if (_showLabel) {
-                    barWidth = _xLabelWidth * 0.5;
-                    
+                    barWidth = _xLabelWidth * 0.5f;
                 }
                 else {
-                    barWidth = _xLabelWidth * 0.6;
-                    
+                    barWidth = _xLabelWidth * 0.6f;
                 }
             }
-            
+
             bar = [[PNBar alloc] initWithFrame:CGRectMake(barXPosition, //Bar X position
-                                                          self.frame.size.height - chartCavanHeight - kXLabelHeight - _chartMargin , //Bar Y position
-                                                          barWidth, // Bar witdh
-                                                          self.showLevelLine ? chartCavanHeight/2.0:chartCavanHeight)]; //Bar height
-          
+                    barYPosition,
+                    barWidth, // Bar witdh
+                    self.showLevelLine ? (chartCavanHeight / 2.0f) - textLayerHeight : chartCavanHeight - textLayerHeight )]; //Bar height
+            bar.showNumbersOnBarTop = _showNumbersOnBarTop;
             //Change Bar Radius
             bar.barRadius = _barRadius;
-            
+
             //Change Bar Background color
             bar.backgroundColor = _barBackgroundColor;
             //Bar StrokColor First
             if (self.strokeColor) {
                 bar.barColor = self.strokeColor;
-            }else{
+            } else {
                 bar.barColor = [self barColorAtIndex:index];
             }
-          
+
             // Add gradient
             if (self.isGradientShow) {
-             bar.barColorGradientStart = bar.barColor;
+                bar.barColorGradientStart = bar.barColor;
             }
-          
+
             //For Click Index
             bar.tag = index;
-            
+
             [_bars addObject:bar];
             [self addSubview:bar];
         }
-        
+
         //Height Of Bar
         float value = [valueString floatValue];
-        float grade =fabsf((float)value / (float)_yValueMax);
-      
+        float grade = fabsf((float) value / (float) _yValueMax);
+
         if (isnan(grade)) {
             grade = 0;
         }
-        bar.maxDivisor = (float)_yValueMax;
+        bar.maxDivisor = (float) _yValueMax;
         bar.grade = grade;
         bar.isShowNumber = self.isShowNumbers;
         CGRect originalFrame = bar.frame;
-        NSString *currentNumber =  [NSString stringWithFormat:@"%f",value];
-      
+        NSString *currentNumber = [NSString stringWithFormat:@"%f", value];
+
         if ([[currentNumber substringToIndex:1] isEqualToString:@"-"] && self.showLevelLine) {
-        CGAffineTransform transform =CGAffineTransformMakeRotation(M_PI);
-        [bar setTransform:transform];
-        originalFrame.origin.y = bar.frame.origin.y + bar.frame.size.height;
-        bar.frame = originalFrame;
-        bar.isNegative = YES;
-        
-      }
-      index += 1;
+            CGAffineTransform transform = CGAffineTransformMakeRotation(M_PI);
+            [bar setTransform:transform];
+            originalFrame.origin.y = bar.frame.origin.y + bar.frame.size.height;
+            bar.frame = originalFrame;
+            bar.isNegative = YES;
+        }
+
+        index += 1;
     }
 }
 

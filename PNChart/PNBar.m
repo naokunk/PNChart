@@ -10,6 +10,8 @@
 #import "PNColor.h"
 #import <CoreText/CoreText.h>
 
+const CGFloat static kTopTextHeight = 22.0f;
+
 @interface PNBar ()
 
 @property (nonatomic) float copyGrade;
@@ -46,7 +48,7 @@
 - (void)setGrade:(float)grade
 {
     _copyGrade = grade;
-    CGFloat startPosY = (1 - grade) * self.frame.size.height;
+    CGFloat startPosY = [self barTopWithGrade:grade];
 
     UIBezierPath *progressline = [UIBezierPath bezierPath];
 
@@ -189,14 +191,25 @@
     return _textLayer;
 }
 
+- (CGFloat)barTopWithGrade:(float)grade
+{
+    CGFloat barTop;
+    if (_showNumbersOnBarTop) {
+        barTop = (1 - grade) * (self.frame.size.height - kTopTextHeight) + kTopTextHeight;
+    } else {
+        barTop = (1 - grade) * self.frame.size.height;
+    }
+    return barTop;
+}
+
 -(void)setGradeFrame:(CGFloat)grade startPosY:(CGFloat)startPosY
 {
     CGFloat textheigt = self.bounds.size.height*self.grade;
   
-    CGFloat topSpace = self.bounds.size.height * (1-self.grade);
+    CGFloat topSpace = [self barTopWithGrade:self.grade];
     CGFloat textWidth = self.bounds.size.width;
   
-    [_chartLine addSublayer:self.textLayer];
+    [self.layer addSublayer:self.textLayer];
     [self.textLayer setFontSize:18.0];
   
     [self.textLayer setString:[[NSString alloc]initWithFormat:@"%0.f",grade*self.maxDivisor]];
@@ -205,12 +218,15 @@
     NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:18.0]};
     size = [self.textLayer.string boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
     float verticalY ;
-  
-    if (size.height>=textheigt) {
-      
-      verticalY = topSpace - size.height;
-    } else {
-      verticalY = topSpace +  (textheigt-size.height)/2.0;
+
+    if (_showNumbersOnBarTop) {
+        verticalY = topSpace - size.height;
+    }else {
+        if (size.height>=textheigt) {
+            verticalY = topSpace - size.height;
+        } else {
+            verticalY = topSpace +  (textheigt-size.height)/2.0;
+        }
     }
   
     [self.textLayer setFrame:CGRectMake((textWidth-size.width)/2.0,verticalY, size.width,size.height)];
