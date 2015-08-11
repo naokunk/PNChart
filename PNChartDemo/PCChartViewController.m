@@ -104,10 +104,13 @@
         };
         self.barChart.labelMarginTop = 5.0;
         self.barChart.showChartBorderBottom = YES;
-        [self.barChart setXLabels:@[@"2",@"3",@"4",@"5",@"2",@"3",@"4",@"5"]];
+        [self.barChart setXLabels:@[@"7/28",@"7/29",@"7/30",@"8/1",@"8/2",@"8/3",@"8/4",@"8/5"]];
 //       self.barChart.yLabels = @[@-10,@0,@10];
         [self.barChart setYValues:@[@10.82,@1.88,@6.96,@33.93,@10.82,@1.88,@6.96,@33.93]];
-        [self.barChart setStrokeColors:@[PNGreen,PNGreen,PNRed,PNGreen,PNGreen,PNGreen,PNRed,PNGreen]];
+//        [self.barChart setStrokeColors:@[PNGreen,PNGreen,PNRed,PNGreen,PNGreen,PNGreen,PNRed,PNGreen]];
+        self.barChart.strokeColor = [UIColor grayColor];
+
+        self.barChart.barHighlightedColor = PNBlue;
         self.barChart.isGradientShow = NO;
         self.barChart.isShowNumbers = YES;
         self.barChart.showNumbersOnBarTop = YES;
@@ -115,7 +118,8 @@
         self.barChart.barWidth = (SCREEN_WIDTH / self.barChart.xLabels.count) - 10.0f;
 
         [self.barChart strokeChart];
-        
+        [self.barChart highlightAllBar];
+
         self.barChart.delegate = self;
         
         [self.view addSubview:self.barChart];
@@ -297,19 +301,8 @@
     NSLog(@"Click on bar %@", @(barIndex));
     
     PNBar * bar = [self.barChart.bars objectAtIndex:barIndex];
-    
-    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    
-    animation.fromValue = @1.0;
-    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    animation.toValue = @1.1;
-    animation.duration = 0.2;
-    animation.repeatCount = 0;
-    animation.autoreverses = YES;
-    animation.removedOnCompletion = YES;
-    animation.fillMode = kCAFillModeForwards;
-    
-    [bar.layer addAnimation:animation forKey:@"Float"];
+
+    [self selectedAnimation:bar];
 }
 
 /* this function is used only for creating random points */
@@ -367,5 +360,32 @@
         }
         [self.radarChart strokeChart];
     }
+}
+
+- (void)barHighlighted:(PNBar *)bar
+{
+    [self selectedAnimation:bar];
+}
+
+
+- (void)panGestureDidEnd
+{
+    NSLog(@"panGestureDidEnd\n%@", self.barChart.highlightedBars);
+}
+
+- (void)selectedAnimation:(UIView *)view
+{
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+
+    animation.fromValue = @1.0;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    animation.toValue = @1.1;
+    animation.duration = 0.2;
+    animation.repeatCount = 0;
+    animation.autoreverses = YES;
+    animation.removedOnCompletion = YES;
+    animation.fillMode = kCAFillModeForwards;
+
+    [view.layer addAnimation:animation forKey:@"Float"];
 }
 @end

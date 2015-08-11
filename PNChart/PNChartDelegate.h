@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class PNBar;
+
 @protocol PNChartDelegate <NSObject>
 @optional
 /**
@@ -30,4 +32,10 @@
 
 - (void)userClickedOnPieIndexItem:(NSInteger)pieIndex;
 - (void)didUnselectPieItem;
+
+- (void)panGestureDidStart;
+- (void)panGestureDidEnd;
+- (void)barHighlighted:(PNBar *)bar;
+- (void)barUnHighlighted:(PNBar *)bar;
+
 @end

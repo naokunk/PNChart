@@ -59,11 +59,15 @@ const CGFloat static kTopTextHeight = 22.0f;
     [progressline setLineCapStyle:kCGLineCapSquare];
 
 
-    if (_barColor) {
-        _chartLine.strokeColor = [_barColor CGColor];
-    }
-    else {
-        _chartLine.strokeColor = [PNGreen CGColor];
+    if (_highlighted && _barHighlightedColor) {
+        _chartLine.strokeColor = _barHighlightedColor.CGColor;
+    }else {
+        if (_barColor) {
+            _chartLine.strokeColor = [_barColor CGColor];
+        }
+        else {
+            _chartLine.strokeColor = [PNGreen CGColor];
+        }
     }
 
     if (_grade) {
@@ -140,7 +144,6 @@ const CGFloat static kTopTextHeight = 22.0f;
 
 }
 
-
 - (void)rollBack
 {
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations: ^{
@@ -170,22 +173,13 @@ const CGFloat static kTopTextHeight = 22.0f;
     CGContextFillRect(context, rect);
 }
 
-
-// add number display on the top of bar
--(CGPathRef)gradePath:(CGRect)rect
-{
-    return nil;
-}
-
 -(CATextLayer*)textLayer
 {
     if (!_textLayer) {
         _textLayer = [[CATextLayer alloc]init];
         [_textLayer setString:@"0"];
         [_textLayer setAlignmentMode:kCAAlignmentCenter];
-        [_textLayer setForegroundColor:[[UIColor colorWithRed:178/255.0 green:178/255. blue:178/255.0 alpha:1.0] CGColor]];
-       _textLayer.hidden = YES;
-
+        _textLayer.hidden = YES;
     }
 
     return _textLayer;
@@ -221,7 +215,9 @@ const CGFloat static kTopTextHeight = 22.0f;
 
     if (_showNumbersOnBarTop) {
         verticalY = topSpace - size.height;
+        [_textLayer setForegroundColor:[_barColor CGColor]];
     }else {
+        [_textLayer setForegroundColor:[[UIColor colorWithRed:178/255.0 green:178/255. blue:178/255.0 alpha:1.0] CGColor]];
         if (size.height>=textheigt) {
             verticalY = topSpace - size.height;
         } else {
@@ -234,7 +230,8 @@ const CGFloat static kTopTextHeight = 22.0f;
 
 }
 
-- (void)setIsShowNumber:(BOOL)isShowNumber{
+- (void)setIsShowNumber:(BOOL)isShowNumber
+{
   if (isShowNumber) {
     self.textLayer.hidden = NO;
     [self setGradeFrame:_copyGrade startPosY:0];
@@ -242,7 +239,9 @@ const CGFloat static kTopTextHeight = 22.0f;
     self.textLayer.hidden = YES;
   }
 }
-- (void)setIsNegative:(BOOL)isNegative{
+
+- (void)setIsNegative:(BOOL)isNegative
+{
   if (isNegative) {
     [self.textLayer setString:[[NSString alloc]initWithFormat:@"- %1.f",_grade*self.maxDivisor]];
     
@@ -267,6 +266,21 @@ const CGFloat static kTopTextHeight = 22.0f;
     
   }
 }
+
+- (void)setHighlighted:(BOOL)highlighted
+{
+    _highlighted = highlighted;
+    if (_showNumbersOnBarTop) {
+        if (_highlighted) {
+            [_textLayer setForegroundColor:[_barHighlightedColor CGColor]];
+        }else {
+            [_textLayer setForegroundColor:[_barColor CGColor]];
+        }
+    }
+
+    [self setGrade:self.grade];
+}
+
 
 -(CABasicAnimation*)fadeAnimation
 {

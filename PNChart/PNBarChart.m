@@ -26,7 +26,7 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        [self setupDefaultValues];
+        [self setup];
     }
     return self;
 }
@@ -36,11 +36,19 @@
     self = [super initWithFrame:frame];
 
     if (self) {
-        [self setupDefaultValues];
+        [self setup];
     }
 
     return self;
 }
+
+- (void)setup
+{
+    UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(paned:)];
+    [self addGestureRecognizer:panGestureRecognizer];
+    [self setupDefaultValues];
+}
+
 
 - (void)setupDefaultValues
 {
@@ -247,7 +255,9 @@
             } else {
                 bar.barColor = [self barColorAtIndex:index];
             }
-
+            if (self.barHighlightedColor) {
+                bar.barHighlightedColor = self.barHighlightedColor;
+            }
             // Add gradient
             if (self.isGradientShow) {
                 bar.barColorGradientStart = bar.barColor;
@@ -431,9 +441,97 @@
     CGPoint touchPoint = [touch locationInView:self];
     UIView *subview = [self hitTest:touchPoint withEvent:nil];
 
-    if ([subview isKindOfClass:[PNBar class]] && [self.delegate respondsToSelector:@selector(userClickedOnBarAtIndex:)]) {
-        [self.delegate userClickedOnBarAtIndex:subview.tag];
+    [self clearHighlightAllBar];
+    if ([subview isKindOfClass:[PNBar class]]) {
+        PNBar *bar = (PNBar *) subview;
+        if (!bar.highlighted) {
+            bar.highlighted = YES;
+            if ([_delegate respondsToSelector:@selector(barHighlighted:)]) {
+                [_delegate barHighlighted:bar];
+            }
+        }
+        if ([self.delegate respondsToSelector:@selector(userClickedOnBarAtIndex:)]) {
+            [self.delegate userClickedOnBarAtIndex:subview.tag];
+        }
     }
+}
+
+#pragma mark - UIPanGestureRecognizer
+
+- (void)paned:(UIPanGestureRecognizer *)panGestureRecognizer
+{
+    CGPoint touchPoint = [panGestureRecognizer locationInView:self];
+    switch (panGestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            if ([_delegate respondsToSelector:@selector(panGestureDidStart)]) {
+                [_delegate panGestureDidStart];
+            }
+            break;
+        case UIGestureRecognizerStateCancelled:
+            break;
+        case UIGestureRecognizerStateChanged:
+        {
+            UIView *subview = [self hitTest:touchPoint withEvent:nil];
+            if ([subview isKindOfClass:[PNBar class]]) {
+                PNBar *bar = (PNBar *) subview;
+                if (!bar.highlighted) {
+                    bar.highlighted = YES;
+                    if ([_delegate respondsToSelector:@selector(barHighlighted:)]) {
+                        [_delegate barHighlighted:bar];
+                    }
+                }
+            }
+            break;
+        };
+        case UIGestureRecognizerStateEnded:
+            if ([_delegate respondsToSelector:@selector(panGestureDidEnd)]) {
+                [_delegate panGestureDidEnd];
+            }
+            break;
+        default:
+            break;
+
+    }
+
+    NSLog(@"barChartPaned %f:%f", touchPoint.x, touchPoint.y);
+}
+
+#pragma mark - Highlight
+
+- (void)clearHighlightAllBar
+{
+    for (PNBar *bar in _bars) {
+        if (bar.highlighted) {
+            bar.highlighted = NO;
+            if ([_delegate respondsToSelector:@selector(barUnHighlighted:)]) {
+                [_delegate barUnHighlighted:bar];
+            }
+
+        }
+    }
+}
+
+- (void)highlightAllBar
+{
+    for (PNBar *bar in _bars) {
+        if (!bar.highlighted) {
+            bar.highlighted = YES;
+            if ([_delegate respondsToSelector:@selector(barHighlighted:)]) {
+                [_delegate barHighlighted:bar];
+            }
+        }
+    }
+}
+
+- (NSArray *)highlightedBars
+{
+    NSMutableArray *highlightedBars = [NSMutableArray array];
+    for (PNBar *bar in _bars) {
+        if (bar.highlighted) {
+            [highlightedBars addObject:bar];
+        }
+    }
+    return highlightedBars;
 }
 
 

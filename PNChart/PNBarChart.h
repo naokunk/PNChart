@@ -86,6 +86,8 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 /** Background color of all bars in the chart. */
 @property (nonatomic) UIColor * barBackgroundColor;
 
+@property (nonatomic) UIColor * barHighlightedColor;
+
 /** Text color for all bars in the chart. */
 @property (nonatomic) UIColor * labelTextColor;
 
@@ -119,5 +121,9 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 @property (nonatomic, assign) BOOL isShowNumbers;
 
 @property (nonatomic) BOOL showNumbersOnBarTop;
+
+- (void)clearHighlightAllBar;
+- (void)highlightAllBar;
+- (NSArray *)highlightedBars;
 
 @end
