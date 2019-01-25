@@ -122,6 +122,8 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 
 @property (nonatomic) BOOL showNumbersOnBarTop;
 
+@property (nonatomic) CGFloat barNumberFonfSize;
+
 - (void)clearHighlightAllBar;
 - (void)highlightAllBar;
 - (NSArray *)highlightedBars;
