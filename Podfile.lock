@@ -1,13 +1,20 @@
 PODS:
-  - Expecta (0.4.2)
+  - Expecta (1.0.6)
   - UICountingLabel (1.2.0)
 
 DEPENDENCIES:
   - Expecta
   - UICountingLabel (~> 1.2.0)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Expecta
+    - UICountingLabel
+
 SPEC CHECKSUMS:
-  Expecta: 78b4e8b0c8291fa4524d7f74016b6065c2e391ec
+  Expecta: 3b6bd90a64b9a1dcb0b70aa0e10a7f8f631667d5
   UICountingLabel: 1db4e7d023e1762171eb226d6dff47a7a84f27aa
 
-COCOAPODS: 0.38.2
+PODFILE CHECKSUM: 0700d0266f6f51764e796936ddd155632972796c
+
+COCOAPODS: 1.5.3
