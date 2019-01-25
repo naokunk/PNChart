@@ -75,7 +75,6 @@
     _isShowNumbers = YES;
     _yLabelPrefix = @"";
     _yLabelSuffix = @"";
-    _barNumberFonfSize = 14.0;
     _yLabelFormatter = ^(CGFloat yValue) {
         return [NSString stringWithFormat:@"%1.f", yValue];
     };
@@ -267,7 +266,11 @@
             //For Click Index
             bar.tag = index;
             
-            bar.textLayerFontSize = self.barNumberFonfSize;
+            if(self.barNumberFonfSize > 0) {
+                bar.textLayerFontSize = self.barNumberFonfSize;
+            } else {
+                bar.textLayerFontSize = barWidth * 0.3;
+            }
 
             [_bars addObject:bar];
             [self addSubview:bar];
