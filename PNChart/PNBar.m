@@ -33,6 +33,7 @@ const CGFloat static kTopTextHeight = 22.0f;
         self.clipsToBounds      = YES;
         [self.layer addSublayer:_chartLine];
         self.barRadius = 2.0;
+        self.textLayerFontSize = 14.0f;
     }
 
     return self;
@@ -204,12 +205,12 @@ const CGFloat static kTopTextHeight = 22.0f;
     CGFloat textWidth = self.bounds.size.width;
   
     [self.layer addSublayer:self.textLayer];
-    [self.textLayer setFontSize:18.0];
+    [self.textLayer setFontSize:self.textLayerFontSize];
   
     [self.textLayer setString:[[NSString alloc]initWithFormat:@"%0.f",grade*self.maxDivisor]];
   
     CGSize size = CGSizeMake(320,2000); //设置一个行高上限
-    NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:18.0]};
+    NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:self.textLayerFontSize]};
     size = [self.textLayer.string boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
     float verticalY ;
 
