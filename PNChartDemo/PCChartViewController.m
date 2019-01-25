@@ -116,6 +116,12 @@
         self.barChart.showNumbersOnBarTop = YES;
         self.barChart.barBackgroundColor = [UIColor whiteColor];
         self.barChart.barWidth = (SCREEN_WIDTH / self.barChart.xLabels.count) - 10.0f;
+        
+        self.barChart.topLabelFormatter = ^(CGFloat yValue){
+            CGFloat yValueParsed = yValue;
+            NSString * labelText = [NSString stringWithFormat:@"a:%0.f",yValueParsed];
+            return labelText;
+        };
 
         [self.barChart strokeChart];
         [self.barChart highlightAllBar];

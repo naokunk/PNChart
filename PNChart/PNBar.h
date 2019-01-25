@@ -32,5 +32,5 @@
 @property (nonatomic, assign) BOOL isShowNumber;        //!< 是否显示numbers
 @property (nonatomic, setter=setHighlighted:) BOOL highlighted;
 @property (nonatomic) BOOL showNumbersOnBarTop;
-
+@property (nonatomic) NSString* topLabel;
 @end

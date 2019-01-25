@@ -207,7 +207,11 @@ const CGFloat static kTopTextHeight = 22.0f;
     [self.layer addSublayer:self.textLayer];
     [self.textLayer setFontSize:self.textLayerFontSize];
   
-    [self.textLayer setString:[[NSString alloc]initWithFormat:@"%0.f",grade*self.maxDivisor]];
+    if(self.topLabel){
+        [self.textLayer setString:self.topLabel];
+    } else {
+        [self.textLayer setString:[[NSString alloc]initWithFormat:@"%0.f",grade*self.maxDivisor]];
+    }
   
     CGSize size = CGSizeMake(320,2000); //设置一个行高上限
     NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:self.textLayerFontSize]};

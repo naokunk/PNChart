@@ -78,6 +78,9 @@
     _yLabelFormatter = ^(CGFloat yValue) {
         return [NSString stringWithFormat:@"%1.f", yValue];
     };
+    _topLabelFormatter = ^(CGFloat yValue) {
+        return [NSString stringWithFormat:@"%1.f", yValue];
+    };
 }
 
 - (void)setYValues:(NSArray *)yValues
@@ -284,8 +287,12 @@
             grade = 0;
         }
         bar.maxDivisor = (float) _yValueMax;
+        if (_showNumbersOnBarTop) {
+            bar.topLabel = _topLabelFormatter(value);
+        }
         bar.grade = grade;
         bar.isShowNumber = self.isShowNumbers;
+
         CGRect originalFrame = bar.frame;
         NSString *currentNumber = [NSString stringWithFormat:@"%f", value];
 

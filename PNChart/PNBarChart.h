@@ -46,6 +46,8 @@ typedef NSString *(^PNYLabelFormatter)(CGFloat yLabelValue);
 /** Formats the ylabel text. */
 @property (copy) PNYLabelFormatter yLabelFormatter;
 
+@property (copy) PNYLabelFormatter topLabelFormatter;
+
 /** Prefix to y label values, none if unset. */
 @property (nonatomic) NSString *yLabelPrefix;
 
